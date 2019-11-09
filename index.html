@@ -5,14 +5,17 @@
     <link href="lib/mocha.css" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="index.css">
 </head>
-<body>
+<body onload="namePrompt()">
 
 
   <!-- 👍 YOUR HTML HERE 👍 -->
   <img id="inn" class="picture" src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Bear_Mountain_Inn_after_reconstruction.jpg" alt="inn">
   <img id="dagger" class="picture" src="https://upload.wikimedia.org/wikipedia/commons/3/30/Dagger_with_Scabbard_MET_DP157706.jpg" alt="dagger">
   <img id="bag" class="picture" src="https://cdn.pixabay.com/photo/2017/07/04/18/27/bag-yellow-2472101_1280.jpg" alt="bag">
+  <!--hero input  -->
+  <section id="name">
 
+  </section>
 
   <!-- I RECOMMEND YOU LEAVE THE REST UNTOUCHED -->
   <button onclick="mocha.checkLeaks(); mocha.run();">Run the tests!</button>

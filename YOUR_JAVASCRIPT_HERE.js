@@ -58,3 +58,18 @@ function callequipWeapon(){
 }
 document.getElementById("bag").addEventListener("click", callequipWeapon);
 
+/*hero name input*/
+function namePrompt(){
+    let heroName = prompt("Good afternoon mysterious stranger, what is your name?");
+
+    /*if empty reprompt */
+    while(!heroName) {
+        heroName = prompt("We don't like strangers here, tell us your name")
+    }
+                
+        /*create placeholder to put name*/
+        const whatToDo = document.createElement("p")
+        whatToDo.innerHTML = `What would you like to do, ${heroName}`
+        const nameSection = document.getElementById("name")
+        nameSection.appendChild(whatToDo)
+    }
