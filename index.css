@@ -6,3 +6,7 @@
 .upperText {
     font-size: 30px
 }
+
+#playerStat {
+    border: 5px dotted rebeccapurple; 
+}

@@ -5,7 +5,7 @@ const hero = {
     name: "", 
     heroic: true,
     inventory: [],
-    health: 8,
+    health: 10,
     weapon: {
         type: "",
         damage: 2
@@ -18,7 +18,7 @@ function rest(person){
         alert("You're already at full health")
     }
         person.health = 10;
-        document.getElementById("healthStat").innerHTML = `Health: 10`
+        document.getElementById(`healthStat-${hero.name}`).innerHTML = `Health: 10`
         return person;
 }
 
@@ -53,7 +53,7 @@ function equipWeapon(person){
     }
     person.weapon = person.inventory[0];
     const currentWeapon = person.weapon.type;
-    document.getElementById("weaponStat").innerHTML = `Weapon: ${currentWeapon}`
+    document.getElementById(`weaponStat-${hero.name}`).innerHTML = `Weapon: ${currentWeapon}`
 }
 
 /*onclick equip first item in inventory*/
@@ -96,12 +96,14 @@ function displayStats(person){
     healthField = document.createElement("p")
     weaponField = document.createElement("p")
     damageField = document.createElement("p")
+    playerStatsField = document.createElement("div")
 
     /*create id for all*/
-    nameField.id = "nameStat"
-    healthField.id = "healthStat"
-    weaponField.id = "weaponStat"
-    damageField.id = "damageStat"
+    nameField.id = `nameStat-${nameValue}`
+    healthField.id = `healthStat-${nameValue}`
+    weaponField.id = `weaponStat-${nameValue}`
+    damageField.id = `damageStat-${nameValue}`
+    playerStatsField.id = "playerStat"
 
 
     //*IF NO WEAPON THEN DISPLAY damage empty*//
@@ -109,7 +111,7 @@ function displayStats(person){
         if(!weaponValue) {
         return `You do no damage`          
       }else{
-          return `You do: ${damageValue} damage`
+          return `Does ${damageValue} damage`
         }}
 
     /*add stats to their fields*/
@@ -121,9 +123,29 @@ function displayStats(person){
 
     /*add all fields together*/
     statsField = document.getElementById("stats")
-    statsField.appendChild(nameField)
-    statsField.appendChild(healthField)
-    statsField.appendChild(weaponField)
-    statsField.appendChild(damageField)
+    playerStatsField.appendChild(nameField)
+    playerStatsField.appendChild(healthField)
+    playerStatsField.appendChild(weaponField)
+    playerStatsField.appendChild(damageField)
+    statsField.appendChild(playerStatsField)
 
 }
+
+/*create enemies*/
+function Monster(name, healthnum, damagenum, weapontype) {
+    this.name = name;
+    this.health = healthnum;
+    this.weapon = {
+        type: weapontype,
+        damage: damagenum
+    }
+    this.catchPhrase = `A ${this.name} appeared, they atack you with their ${this.weapon.type}`
+}
+
+const ogre = new Monster("ogre", 5, 1, "stick");
+const dragon = new Monster("dragon", 10, 3, "firebreath");
+const thief = new Monster("thief", 2, 2, "sword");
+const banana = new Monster("rogue banana", 1, 6, "bananapeel");
+
+/*place for them to appear*/
+displayStats(ogre);
