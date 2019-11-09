@@ -5,12 +5,19 @@ const hero = {
     name: "", 
     heroic: true,
     inventory: [],
-    health: 8,
+    health: 10,
     weapon: {
         type: "",
         damage: 2
     }
 }
+
+/*monster objects */
+const ogre = new Monster("ogre", 5, 1, "stick", "https://cdn.pixabay.com/photo/2019/08/11/23/22/orc-4400045_960_720.png");
+const dragon = new Monster("dragon", 10, 3, "firebreath", "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Friedrich-Johann-Justin-Bertuch_Mythical-Creature-Dragon_1806.jpg/1020px-Friedrich-Johann-Justin-Bertuch_Mythical-Creature-Dragon_1806.jpg");
+const thief = new Monster("thief", 2, 2, "sword", "https://cdn.pixabay.com/photo/2018/04/10/01/22/thief-3306100_1280.png");
+const banana = new Monster("rogue-banana", 1, 6, "bananapeel", "https://upload.wikimedia.org/wikipedia/commons/8/8a/Banana-Single.jpg");
+const monsters = [ogre, dragon, thief, banana];
 
 /*rest function*/
 function rest(person){
@@ -18,7 +25,7 @@ function rest(person){
         alert("You're already at full health")
     }
         person.health = 10;
-        document.getElementById("healthStat").innerHTML = `Health: 10`
+        document.getElementById(`healthStat-${hero.name}`).innerHTML = `Health: 10`
         return person;
 }
 
@@ -26,6 +33,8 @@ function rest(person){
 /*call rest function for hero when you click the inn*/
 function callRestHero(){
     rest(hero);
+    monsterPoss()
+    damageField.innerHTML
 }
 document.getElementById("inn").addEventListener("click", callRestHero);
 
@@ -42,6 +51,10 @@ const dagger = {
 };
 function callpickUpDagger(){
     pickUpItem(hero, dagger);
+    monsterPoss()
+    daggerImage = document.getElementById("dagger")
+    daggerImage.style.display = "none"
+   
 }
 document.getElementById("dagger").addEventListener("click", callpickUpDagger);
 
@@ -53,12 +66,16 @@ function equipWeapon(person){
     }
     person.weapon = person.inventory[0];
     const currentWeapon = person.weapon.type;
-    document.getElementById("weaponStat").innerHTML = `Weapon: ${currentWeapon}`
+    document.getElementById(`weaponStat-${hero.name}`).innerHTML = `Weapon: ${currentWeapon}`
+
+    const currentDamage = person.weapon.damage;
+    document.getElementById(`damageStat-${hero.name}`).innerHTML = `Your weapon does ${currentDamage} damage`
 }
 
 /*onclick equip first item in inventory*/
 function callequipWeapon(){
     equipWeapon(hero);
+    monsterPoss()
 }
 document.getElementById("bag").addEventListener("click", callequipWeapon);
 
@@ -79,6 +96,8 @@ function namePrompt(){
     /*also add it to the object*/
     hero.name = heroName;
     displayStats(hero)
+    monsterPlaceHolder(monsters)
+    monsterPoss()
 }
 
 /* Write displayStats function that writes your hero's name, health, weapontype, weapon damage to the page. Call it at the end of your script*/
@@ -96,12 +115,14 @@ function displayStats(person){
     healthField = document.createElement("p")
     weaponField = document.createElement("p")
     damageField = document.createElement("p")
+    playerStatsField = document.createElement("div")
 
     /*create id for all*/
-    nameField.id = "nameStat"
-    healthField.id = "healthStat"
-    weaponField.id = "weaponStat"
-    damageField.id = "damageStat"
+    nameField.id = `nameStat-${nameValue}`
+    healthField.id = `healthStat-${nameValue}`
+    weaponField.id = `weaponStat-${nameValue}`
+    damageField.id = `damageStat-${nameValue}`
+    playerStatsField.id = "playerStat"
 
 
     //*IF NO WEAPON THEN DISPLAY damage empty*//
@@ -109,7 +130,7 @@ function displayStats(person){
         if(!weaponValue) {
         return `You do no damage`          
       }else{
-          return `You do: ${damageValue} damage`
+          return `Does ${damageValue} damage`
         }}
 
     /*add stats to their fields*/
@@ -121,9 +142,80 @@ function displayStats(person){
 
     /*add all fields together*/
     statsField = document.getElementById("stats")
-    statsField.appendChild(nameField)
-    statsField.appendChild(healthField)
-    statsField.appendChild(weaponField)
-    statsField.appendChild(damageField)
+    playerStatsField.appendChild(nameField)
+    playerStatsField.appendChild(healthField)
+    playerStatsField.appendChild(weaponField)
+    playerStatsField.appendChild(damageField)
+    statsField.appendChild(playerStatsField)
 
 }
+
+/*create enemies*/
+function Monster(name, healthnum, damagenum, weapontype, imgurl) {
+    this.name = name;
+    this.health = healthnum;
+    this.weapon = {
+        type: weapontype,
+        damage: damagenum
+    }
+    this.catchPhrase = `A ${this.name} appeared, they atack you with their ${this.weapon.type}`
+    this.img = imgurl
+}
+
+/*select one monster randomly*/
+function selectRandomMonster(){
+    let randomNumber = Math.floor(Math.random()*monsters.length)
+    randomMonster = monsters[randomNumber]
+    randomMonsterImage = document.getElementById(randomMonster.name) 
+    randomMonsterImage.style.display = "block"
+    displayStats(randomMonster)
+    return randomMonster
+}
+
+/* makes it appear randomly*/
+function monsterPoss(){
+    let randomNumber = Math.floor(Math.random()*4)
+    if(randomNumber >= 2){
+        return selectRandomMonster()
+    }
+    return null
+}
+
+
+/*createsPictures for each monster*/
+function monsterPlaceHolder(monsters){
+    monsters.forEach(monster => {
+        const monsterimage = document.createElement("img")
+        monsterimage.src = monster.img
+        monsterimage.classList.add("picture")
+        monsterimage.classList.add("monster")
+        monsterimage.id = monster.name
+        monsterimage.style.display = "none"
+        const monsterPlace = document.getElementById("options")
+        monsterPlace.appendChild(monsterimage)
+    });
+}
+
+/*On click battle*/
+function battle(randomMonster){
+    randomMonster.health = randomMonster.health - hero.weapon.damage;
+    if(randomMonster.health <= 0){
+        randomMonster.style.display = "invisible"
+    } else {
+        hero.health = hero.health = randomMonster.weapon.damage;
+    }
+    if(hero.health <= 0){
+        alert("You died: Game Over")
+    } else {
+        /*update all the stats */
+        document.getElementById(`healthStat-${hero.name}`).innerHTML = `Health: ${hero.health}`
+        document.getElementById(`healthStat-${monster.name}`).innerHTML = `Health: ${monster.health}`
+    }
+    return null
+}
+
+/*Calling battle DOES NOT WORK Since I need to store the random monster and then pass it through the function here call it here but I dont have enough time for that*/
+function callBattle(){
+    battle(randomMonster)
+} 
+document.getElementById(randomMonster.name).addEventListener("click", battle); 
