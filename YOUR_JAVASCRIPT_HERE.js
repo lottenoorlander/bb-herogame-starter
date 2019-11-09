@@ -7,7 +7,7 @@ const hero = {
     inventory: [],
     health: 10,
     weapon: {
-        type: "dagger",
+        type: "",
         damage: 2
     }
 }
@@ -34,7 +34,10 @@ function pickUpItem(person, weapon){
 }
 
 /*call pickupitem function for hero when you click the inn*/
-const dagger = hero.weapon;
+const dagger = {
+    type: "dagger",
+    damage: 2
+};
 function callpickUpDagger(){
     pickUpItem(hero, dagger);
 }
@@ -42,6 +45,16 @@ document.getElementById("dagger").addEventListener("click", callpickUpDagger);
 
 
 /*equip a weapon function*/
-function equipWeapon(){
-
+function equipWeapon(person){
+    if(!person.inventory[0]){
+        return null
+    }
+    person.weapon = person.inventory[0];
 }
+
+/*onclick equip first item in inventory*/
+function callequipWeapon(){
+    equipWeapon(hero);
+}
+document.getElementById("bag").addEventListener("click", callequipWeapon);
+
