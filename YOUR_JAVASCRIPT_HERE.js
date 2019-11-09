@@ -12,6 +12,13 @@ const hero = {
     }
 }
 
+/*monster objects */
+const ogre = new Monster("ogre", 5, 1, "stick", "https://cdn.pixabay.com/photo/2019/08/11/23/22/orc-4400045_960_720.png");
+const dragon = new Monster("dragon", 10, 3, "firebreath", "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Friedrich-Johann-Justin-Bertuch_Mythical-Creature-Dragon_1806.jpg/1020px-Friedrich-Johann-Justin-Bertuch_Mythical-Creature-Dragon_1806.jpg");
+const thief = new Monster("thief", 2, 2, "sword", "https://cdn.pixabay.com/photo/2018/04/10/01/22/thief-3306100_1280.png");
+const banana = new Monster("rogue-banana", 1, 6, "bananapeel", "https://upload.wikimedia.org/wikipedia/commons/8/8a/Banana-Single.jpg");
+const monsters = [ogre, dragon, thief, banana];
+
 /*rest function*/
 function rest(person){
     if(person.health === 10){
@@ -26,6 +33,8 @@ function rest(person){
 /*call rest function for hero when you click the inn*/
 function callRestHero(){
     rest(hero);
+    monsterPoss()
+    damageField.innerHTML
 }
 document.getElementById("inn").addEventListener("click", callRestHero);
 
@@ -42,6 +51,10 @@ const dagger = {
 };
 function callpickUpDagger(){
     pickUpItem(hero, dagger);
+    monsterPoss()
+    daggerImage = document.getElementById("dagger")
+    daggerImage.style.display = "none"
+   
 }
 document.getElementById("dagger").addEventListener("click", callpickUpDagger);
 
@@ -54,11 +67,15 @@ function equipWeapon(person){
     person.weapon = person.inventory[0];
     const currentWeapon = person.weapon.type;
     document.getElementById(`weaponStat-${hero.name}`).innerHTML = `Weapon: ${currentWeapon}`
+
+    const currentDamage = person.weapon.damage;
+    document.getElementById(`damageStat-${hero.name}`).innerHTML = `Your weapon does ${currentDamage} damage`
 }
 
 /*onclick equip first item in inventory*/
 function callequipWeapon(){
     equipWeapon(hero);
+    monsterPoss()
 }
 document.getElementById("bag").addEventListener("click", callequipWeapon);
 
@@ -79,6 +96,8 @@ function namePrompt(){
     /*also add it to the object*/
     hero.name = heroName;
     displayStats(hero)
+    monsterPlaceHolder(monsters)
+    monsterPoss()
 }
 
 /* Write displayStats function that writes your hero's name, health, weapontype, weapon damage to the page. Call it at the end of your script*/
@@ -132,7 +151,7 @@ function displayStats(person){
 }
 
 /*create enemies*/
-function Monster(name, healthnum, damagenum, weapontype) {
+function Monster(name, healthnum, damagenum, weapontype, imgurl) {
     this.name = name;
     this.health = healthnum;
     this.weapon = {
@@ -140,12 +159,37 @@ function Monster(name, healthnum, damagenum, weapontype) {
         damage: damagenum
     }
     this.catchPhrase = `A ${this.name} appeared, they atack you with their ${this.weapon.type}`
+    this.img = imgurl
 }
 
-const ogre = new Monster("ogre", 5, 1, "stick");
-const dragon = new Monster("dragon", 10, 3, "firebreath");
-const thief = new Monster("thief", 2, 2, "sword");
-const banana = new Monster("rogue banana", 1, 6, "bananapeel");
+/*select one monster randomly*/
+function selectRandomMonster(){
+    let randomNumber = Math.floor(Math.random()*monsters.length)
+    randomMonster = monsters[randomNumber]
+    randomMonsterImage = document.getElementById(randomMonster.name) 
+    console.log(randomMonsterImage)
+    randomMonsterImage.style.display = "block"
+    displayStats(randomMonster)
+}
 
-/*place for them to appear*/
-displayStats(ogre);
+function monsterPoss(){
+    let randomNumber = Math.floor(Math.random()*4)
+    if(randomNumber >= 2){
+        return selectRandomMonster()
+    }
+    return null
+}
+
+
+/*createsPictures for each monster*/
+function monsterPlaceHolder(monsters){
+    monsters.forEach(monster => {
+        const monsterimage = document.createElement("img")
+        monsterimage.src = monster.img
+        monsterimage.classList.add("picture")
+        monsterimage.id = monster.name
+        monsterimage.style.display = "none"
+        const monsterPlace = document.getElementById("options")
+        monsterPlace.appendChild(monsterimage)
+    });
+}
