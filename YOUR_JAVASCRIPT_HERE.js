@@ -167,11 +167,12 @@ function selectRandomMonster(){
     let randomNumber = Math.floor(Math.random()*monsters.length)
     randomMonster = monsters[randomNumber]
     randomMonsterImage = document.getElementById(randomMonster.name) 
-    console.log(randomMonsterImage)
     randomMonsterImage.style.display = "block"
     displayStats(randomMonster)
+    return randomMonster
 }
 
+/* makes it appear randomly*/
 function monsterPoss(){
     let randomNumber = Math.floor(Math.random()*4)
     if(randomNumber >= 2){
@@ -187,9 +188,34 @@ function monsterPlaceHolder(monsters){
         const monsterimage = document.createElement("img")
         monsterimage.src = monster.img
         monsterimage.classList.add("picture")
+        monsterimage.classList.add("monster")
         monsterimage.id = monster.name
         monsterimage.style.display = "none"
         const monsterPlace = document.getElementById("options")
         monsterPlace.appendChild(monsterimage)
     });
 }
+
+/*On click battle*/
+function battle(randomMonster){
+    randomMonster.health = randomMonster.health - hero.weapon.damage;
+    if(randomMonster.health <= 0){
+        randomMonster.style.display = "invisible"
+    } else {
+        hero.health = hero.health = randomMonster.weapon.damage;
+    }
+    if(hero.health <= 0){
+        alert("You died: Game Over")
+    } else {
+        /*update all the stats */
+        document.getElementById(`healthStat-${hero.name}`).innerHTML = `Health: ${hero.health}`
+        document.getElementById(`healthStat-${monster.name}`).innerHTML = `Health: ${monster.health}`
+    }
+    return null
+}
+
+/*Calling battle DOES NOT WORK Since I need to store the random monster and then pass it through the function here call it here but I dont have enough time for that*/
+function callBattle(){
+    battle(randomMonster)
+} 
+document.getElementById(randomMonster.name).addEventListener("click", battle); 
