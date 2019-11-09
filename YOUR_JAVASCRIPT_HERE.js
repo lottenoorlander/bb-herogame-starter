@@ -5,7 +5,7 @@ const hero = {
     name: "", 
     heroic: true,
     inventory: [],
-    health: 10,
+    health: 8,
     weapon: {
         type: "",
         damage: 2
@@ -18,8 +18,10 @@ function rest(person){
         alert("You're already at full health")
     }
         person.health = 10;
+        document.getElementById("healthStat").innerHTML = `Health: 10`
         return person;
 }
+
 
 /*call rest function for hero when you click the inn*/
 function callRestHero(){
@@ -33,7 +35,7 @@ function pickUpItem(person, weapon){
     person.inventory.push(weapon);
 }
 
-/*call pickupitem function for hero when you click the inn*/
+/*call pickupitem function for hero when you click the dagger*/
 const dagger = {
     type: "dagger",
     damage: 2
@@ -50,6 +52,8 @@ function equipWeapon(person){
         return null
     }
     person.weapon = person.inventory[0];
+    const currentWeapon = person.weapon.type;
+    document.getElementById("weaponStat").innerHTML = `Weapon: ${currentWeapon}`
 }
 
 /*onclick equip first item in inventory*/
@@ -79,7 +83,7 @@ function namePrompt(){
 
 /* Write displayStats function that writes your hero's name, health, weapontype, weapon damage to the page. Call it at the end of your script*/
 function displayStats(person){
-    
+        
     /*stats you need*/
      const nameValue = person.name
      const healthValue = person.health
@@ -93,12 +97,19 @@ function displayStats(person){
     weaponField = document.createElement("p")
     damageField = document.createElement("p")
 
+    /*create id for all*/
+    nameField.id = "nameStat"
+    healthField.id = "healthStat"
+    weaponField.id = "weaponStat"
+    damageField.id = "damageStat"
+
+
     //*IF NO WEAPON THEN DISPLAY damage empty*//
     const damageWeaponOrNo = ()=> {
         if(!weaponValue) {
-        return `It does no damage`          
+        return `You do no damage`          
       }else{
-          return `It does: ${damageValue} damage`
+          return `You do: ${damageValue} damage`
         }}
 
     /*add stats to their fields*/
